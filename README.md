@@ -18,5 +18,5 @@
 
 
 ## Reference
-[유림님 TIL](https://github.com/milooy/TIL#today-i-learned)
-[성윤님 TIL](https://github.com/zzsza/TIL)
+- [유림님 TIL](https://github.com/milooy/TIL#today-i-learned)
+- [성윤님 TIL](https://github.com/zzsza/TIL)
