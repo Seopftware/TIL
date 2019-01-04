@@ -590,5 +590,108 @@ document.write(p2.introduce());
 ### 자바스크립트 생성자의 특징
 - 일반적인 객체지향 언어에서 생성자는 클래스의 소속이다. 하지만 자바스크립트에서 객체를 만드는 주체는 함수다. 함수에 new를 붙이는 것을 통해서 객체를 만들 수 있다는 점은 자바스크립트에서 함수의 위상을 암시하는 단서이면서 또 자바스크립트가 추구하는 자유로움을 보여주는 사례라고 할 수 있다.
 
+## 전역객체
+
+### 전역객체란?
+- 전역객체(Global object)는 특수한 객체다. 모든 객체는 이 전역객체의 프로퍼티다.
+
+```
+var o = {'func':function(){
+	alert('Hello');
+    }}
+o.func();
+window.function();
+```
+- 모든 전역 변수와 함수는 window 객체의 프로퍼티다.
+- 객체를 명시하지 않으면 암시적으로 window의 프로퍼티로 간주된다.
+- 자바스크립트에서 모든 객체는 기본적으로 전역객체의 프로퍼티임을 알 수 있다. (객체지향-모든 것이 객체에 소속되어 있기 때문에)
+
+### 전역객체의 API
+- ECMAScript에서는 전역객체의 API를 정의해두었다. 그 외의 API는 호스트 환경에서 필요에 따라서 추가로 정의하고 있다. 이를테면 웹브라우저 자바스크립트에서는 alert()이라는 전역객체의 메소드가 존재하지만 node.js에는 존재하지 않는다. 
+- 또한 전역객체의 이름도 호스트환경에 따라서 다른데, 웹브라우저에서 전역객체는 window이지만 node.js에서는 global이다. 
+
+## this
+- this는 함수 내에서 함수 호출 맥락(context)을 의미한다.
+- 맥락이라는 것은 상화에 따라서 달라진다는 의미인데, 즉 함수를 어떻게 호출하느냐에 따라서 this가 가르키는 대상이 달라진다는 뜻이다.
+- 함수와 객체의 관계가 느슨한 자바스크립트에서 this는 이 둘을 연결시켜주는 실질적인 연결점의 역할을 한다
+
+### 함수호출
+
+```
+function func(){
+	if(window === this) {
+    	console.log("window === this");
+    }
+}
+func(); // window === this
+```
+- this는 전역객체인 window와 같다.
+
+### 메소드의 호출
+
+```
+var o = {
+	func : function(){
+    	if( o === this ) {
+        	console.log("o === this");
+        }
+    }
+}
+o.func(); // o === this
+```
+- 객체의 소속인 메소드의 this는 그 객체를 가리킨다.
+- (=함수 안에서 this라는 키워드는 그 함수가 소속되어 있는 객체를 가리킨다)
+
+### 생성자의 호출
+```
+var funcThis = null;
+
+function Func(){
+	funcThis = this;
+}
+var o1 = Func(); // 일반 함수
+if(funcThis === window){
+	document.write('window <br />');
+}
+var o2 = new Func(); // 생성자 함수
+if(funcThis === o2){
+	document.write('o2 <br />');
+}
+```
+- 함수를 호출하면, 그 함수는 window라는 객체의 메소드 이기 때문에 this는 window를 가리킨다.
+- 생성자는 빈 객체를 만든다. 그리고 이 객체내에서 this는 만들어진 객체를 가르킨다. (new라는 생성자를 붙이면 JS는 내부적으로 비어있는 객체를 만들고, 비어있는 객체가 그 생성자 안에서의 this가 된다.)
+```
+function func(){
+	document.write(o);
+}
+var o = new Func(); // undefined
+```
+- 생성자가 실행되기 전까지 객체는 변수에도 할당될 수 없기 때문에 this가 아니면 객체 대한 어떠한 작업을 할 수 없다. (중요!)
+
+### apply, call
+```
+var o = {}
+var p = {}
+function func(){
+	switch(this){
+    	case o:
+        	document.write('o<br />');
+            break;
+        case p:
+        	document.write('p<br />');
+            break;
+        case window:
+        	document.write('window<br />');
+            break
+     }
+}
+func(); // window
+func.apply(o); // o
+func.apply(p); // p
+```
+- 전통적인 객체지향 언어에서 메소드(slave)는 객체(master)에 소속되어 있었다.
+- 하지만 JS에서 함수가 객체 이기도하고, 함수를 어떻게 호출하느냐에 따라 객체 window, o, p에 소속되기도 한다.
+
+
 reference
 - [생활코딩 JS 언어 수업](https://opentutorials.org/course/743/4650)
