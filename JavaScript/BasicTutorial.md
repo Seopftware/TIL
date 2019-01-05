@@ -692,6 +692,118 @@ func.apply(p); // p
 - 전통적인 객체지향 언어에서 메소드(slave)는 객체(master)에 소속되어 있었다.
 - 하지만 JS에서 함수가 객체 이기도하고, 함수를 어떻게 호출하느냐에 따라 객체 window, o, p에 소속되기도 한다.
 
+## 상속
+
+### 상속(inheritance)이란?
+- 객체는 연관된 로직들로 이루어진 작은 프로그램이라고 할 수 있다.
+- 상속은 객체의 로직을 그대로 물려 받는 또 다른 객체를 만들 수 있는 기능을 의미한다. 단순히 물려받는 것 뿐만 아니라 기존의 로직을 수정하고 변경해서 새로운 객체를 만들 수 있게 해준다.
+
+```
+fuction Person(name){
+	this.name = name;
+}
+Person.prototype.name = null;
+Person.prototype.introduce = function(){
+	return "My name is " + this.name;
+}
+function Programmer(name){
+	this.name = name;
+}
+Programmer.prototype = new Person();
+
+var p1 = new Person('egoing');
+document.write(p1.introduce()+"<br />");
+```
+- Programmer라는 생성자를 만들었다. 이 생성자의 prototype과 Person의 객체를 연결했더니 Progrmmaer 객체도 메소드 introduce를 사용할 수 있게 되었다.
+- Programmer가 Person의 기능을 상속하고 있는 것이다.
+
+```
+function Person(name){
+	this.name = name;
+}
+
+Person.prototype.name = null;
+Person.prototype.introduce = function(){
+	return "My name is " + this.name;
+}
+
+function Programmer(name){
+	this.name = name;
+}
+Programmer.prototype = new Person();
+Programmer.prototype.coding = function(){
+	return "hello world";
+}
+
+function Designer(name){
+	this.name = name;
+}
+Designer.prototype = new Person();
+Designer.prototype.design = function(){
+	return "beautiful!";
+}
+
+var p1 = new Programmer("inseop");
+document.write(p1.introduce()+"<br />");
+document.write(p1.coding()+"<br />");
+
+var p2 = new Designer("jaywon");
+document.write(p2.introduce()+"<br />");
+document.write(p2.design()+"<br />");
+```
+- Programmer는 Person의 기능을 가지고 있으면서 Person이 갖고 있지 않은 기능인 메소드 coding을 갖고 있다.
+
+## prototype
+
+### prototype
+- prototype은 일반적인 객체지향 언어와 다른 가장 큰 차이점이다
+- prototype은 원형이라는 뜻으로 말 그대로 객체의 원형이라고 할 수 있다.
+- 함수는 객체다. 그러므로 생성자로 사용될 함수도 객체다.
+- 객체는 프로퍼티를 가질 수 있는데 prototype이라는 프로퍼티는 그 용도가 약속되어 있는 특수한 프로퍼티다.
+- prototype에 저장된 속성들은 생성자를 통해서 객체가 만들어질 때 그 객체에 연결된다.
+- 생성자 new의 역할은 비어있는 객체를 만드는 역할을 한다.
+
+```
+// prototype chain 이라고 한다.
+function Ultra(){}
+Ultra.prototype.ultraProp = true;
+
+function Super(){}
+Super.prototype = new Ultra();
+
+function Sub(){} 
+Sub.prototype = new Super();
+
+var o = new Sub();  
+console.log(o.ultraProp); // true
+```
+- 생성자 Sub를 통해서 만들어진 객체 o가 Ultra의 프로퍼티 ultraProp에 접근 가능한 것은 prototype 체인으로 Sub와 Ultra가 연결되어 있기 때문이다.
+- 1.객체 o에서 ultraProp를 찾는다
+- 2.없다면 Sub.prototype.ultraProp를 찾는다
+- 3.없다면 Super.prototype.ultraProp를 찾는다
+- 4.없다면 Ultra.prototype.ultraProp를 찾는다
+- prototype는 객체와 객체를 연결하는 체인의 역할을 한다. 이러한 관계를 prototype chain이라고 한다.
+
+```
+*주의*
+Super.prototype = Ultra.prototype으로 하면 안된다. 이렇게하면 Super.prototype의 값을 변경하면 그것이 Ultra.prototype의 값도 변경하기 때문이다. Super.prototype = new Ultra();는 Ultra.prototype의 원형으로 하는 객체가 생성되기 때문에 new Ultra()를 통해서 만들어진 객체에 변화가 생겨도 Ultra.prototype의 객체에는 영향을 주지 않는다.
+```
+
+## 표준 내장 객체의 확장
+- 표준 내장 객체(Standard Built-in Object)는 자바스크립트가 기본적으로 가지고 있는 객체들을 의미한다.
+- 내장 객체가 중요한 이유는 프로그래밍을 하는데 기본적으로 필요한 도구들이기 때문이다.
+
+**자바스크립트는 아래와 같은 내장 객체를 가지고 있다.**
+	- Object
+	- Function
+	- Array
+	- String
+	- Boolean
+	- Number
+	- Math
+	- Date
+	- RegExp
+
 
 reference
 - [생활코딩 JS 언어 수업](https://opentutorials.org/course/743/4650)
