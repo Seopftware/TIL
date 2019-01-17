@@ -105,9 +105,82 @@ Manetic
 
 ### 27. Let's Get Our Hands Dirty! Launch An EC2 Instance - Part1
 ### 28. Let's Get Our Hands Dirty! Launch An EC2 Instance - Part2
+action
+- Termination protection 기능 활용 중인지
+- Secutity Group 관리 제대로 되고 있는지
+- Monitoring System 유용한지?
+
+Lab Summary
+- Termination Protection is turned off by default, you must turn it on.
+- On an EBS-backed instance, the default action is for the root EBS volume to be deleted when the instance is terminated.
+- EBS Root Volume of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool (such as bit locker etc) to encrypt the root volume, or this can be done when creating AMI's (lab to follow) in the AWS console or using the API.
+- Additional volumes can be encrypted.
 ### 29. How To Use Putty (Windows Users Only)
 ### 30. Security Groups Basics
+
+action
+- security group을 어떻게 관리하고 있는가? 관리 전략은?
+
+#### Security Group Lab
+- All inbound Traffic is Blocked By Default
+- All outbound Traffic is Allowed
+- Changes to Security Groups take effect immediately
+- You can have any number of EC2 instances within a security group
+- You can have multiple security groups attached to EC2 Instances
+- Security Groups are STATEFUL
+	- If you create an inbound rule allowing traffic in, that traffic is automatically allowed back out againg.
+- You cannot block specific IP addresses using Security Groups, instaed use Network Access Control Lists.
+- You can specify allow rules, but not deny rules.
+
 ### 31. Upgrading EBS Volume Types - Lab
+
+#### Volumes & Snapshots
+
+- Volumes exist on EBS:
+	- Virtual Hard Disk
+- Snapshots exist on S3
+- Snapshots are point in time copies of Volumes.
+- Snapshots are incremental - this means that only the blocks that have changed since your last snapshot are moved to S3.
+- If this is your first snapshot, it may take some time to create.
+
+#### Snapshots of Root
+
+- To create a snapshot for Amazon EBS volumes that serve as root devices, you should stop the instance before taking the snapshot.
+- However you can take a snap while the instance is runnung.
+- You can create AMI's from EBS-backed Instances and Snapshots.
+- You can change EBS volume sizes on the fly, including changing the size and storage type.
+- Volumes will ALWAYS be in the same availability zone as the EC2 instance.
+- To move an EC2 volume from one AZ/Region to another, take a snap or an image of it, then copy it to the new AZ/Region
+
+#### Volumes vs Snapshots - Security
+
+- Snapshots of encrypted volumes are encrypted automatically.
+- Volumes restored from encrypted snapshots are encrypted automatically.
+- You can share snapshots, but only if they are unencrypted.
+	- These snapshots can be shared with other AWS accounts or made public.
+
 ### 32. Creating a Windwos EC2 Instance & RAID Group
+
+#### RAID, Volumes & Snapshots
+
+- RAID = Redundant Array of Independent Disks
+	- RAID 0: Striped, No Redundancy, Good Performance
+	- RAID 1: Mirrored, Redundancy
+	- RAID 5: Good for reads, bad for writes, AWS does not recommend ever putting RAID 5's on EBS
+	- RAID 10: Striped & Mirrored, Good Redundancy, Good Performance
+
+#### How can I take Snapshot of a RAID Array?
+
+- Problem: Take a snapshot, the snapshot excludes data held in the cache by application and the OS. This tends not to matter on a single volume, however using multiple volumes in a RAID array, this can be a problem due to interdependencies of the array.
+- Solution: Take an application consistent snapshot.
+
+- Stop the application from writing to disk
+- Flush all caches to the disk
+- How can we do this?
+	- Freeze the file system
+	- Unmount the RAID Array
+	- Shutting down the associated EC2 instance
+
+
 ### 33. Create An AMI - Lab
 ### 34. AMI's - EBS Root Volumes vs Instance Store
