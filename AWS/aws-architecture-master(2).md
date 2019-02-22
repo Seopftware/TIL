@@ -215,5 +215,133 @@ action
 - You can reboot both, you will not lose your data.
 - By default, both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root device volume.
 
-
 ### 35. Load Balancing Theory
+
+#### Type Of Load Balancers
+
+- Application Load Balancer
+- Network Load Balancer
+- Classic Load Balancer
+
+
+
+#### Application Load Balancers
+
+- Application Load Balancers are best suited for load balancing of HTTP and HTTPS traffic. They operate at Layer 7 and are application-aware. They are intelligent, and you can create advanced request routing, sending specified requests to specific web servers.
+
+
+
+#### Network Load Balancer
+
+- Network Load Balancer are best suited for load balancing of TCP traffic where extreme performance is required. Operating at the connection level (Layer 4), Network Load Balancer are capable of handling mllions of requests per second, while maintaing ultra-low latencies. 
+
+
+
+#### Classic Load Balancers
+
+- Classic Load Balancers are the legacy Elastic Load Balancers. You can load balance HTTP/HTTPS applications and use Layer 7-specific features, such as X-Forwarded and sticky sessions. You can also use strict Layer 4 load balancing for applications that rely purely on the TCP protocol.
+
+
+
+#### Load Balancer Errors
+
+- Classic Load Balancers - if your application stops responding, the ELB (Classic Load Balancer) responds with a 504 error
+- This means that the application is having issues. This could be either at the Web Server layer or at the Database Layer.
+- Identify where the application is failing, and scale it up or out where possible
+
+
+
+#### ELB Exam Tips
+
+- 3 Types of Load Balancers
+  - Application Load Balancers
+  - Network Load Balancers
+  - Classic Load Balancers
+
+- 504 Error means that gateway has timed out. This means that the application not responding within the idle timeout period.
+  - Trouble shoot the application. Is it the Web server or Database Server?
+- If you need the IPv4 address of your end user, look for the X-Forwareded-For Header.
+
+
+
+### 36.Load Balancers & Health Checks
+
+#### Elastic Load Balancers
+
+- Instances monitored by ELB are reported as : InService or OutofService
+- Health Checks check the instance health by talking to it
+- Have their own DNS name. You are never given an IP address
+- Read the ELB FAQ for Classic Load Balancers
+
+
+
+### 37. Cloud Watch EC2
+
+#### Exam Tips
+
+- Standard Monitoring = 5 Minutes
+- Detailed Monitoring = 1 Minute
+
+
+
+#### What can I do with Cloud Watch?
+
+- Dashboards - Create awesome dashboards to see what is happening with your AWS environment
+- Alarms - Allows you to set Alarms that notify you when particular thresholds are hit
+- Events - CloudWatch Events helps you to respond to state changes in your AWS resources
+- Logs - CloudWatch Logs helps you to aggregate, monitor, and store logs.
+
+
+
+### 38.The AWS Command Line & EC2 
+
+### 39.Using IAM roles with EC2
+
+- role이 짱인 이유는 로컬에 키를 저장하지 않아도 되기 때문에 보안적으로 안전하다
+
+### 
+
+### 40.S3 CLI & Regions
+
+- EC2를 통해 S3 bucket에 접속하기
+- S3 bucket을 생성하고, EC2에 해당 bucket에 접속할 수 있는 IAM role 부여
+- EC2에서 IAM role attach
+
+- S3 bucket에 있는 데이터 다운로드
+  - aws s3 cp --recursive s3://acloudguru-apsoutheast2 /home/ec2-user
+
+
+
+### 41.Using Bootstrap Scripts
+
+#### BashScript
+
+- MyKeyPair.pem
+  - chmod 400 MyKeyPair.pem (권한을 400으로 변경 필요)
+
+- ssh ec2-user@51.41.13.14 -i MyKeyPair.pem
+- sudo su 
+  - root 권한 얻기
+
+이 명령어들을 EC2가 실행될 때 자동으로 실행될 수 있게 작업해보자
+
+- yum update -y
+- yum install httpd -y
+- service httpd start
+- chkconfig httpd on
+- cd /var/www/html
+
+
+
+나의 S3 bucket List를 볼 수 있는 명령어 (안될 경우 role check)
+
+- aws s3 ls
+
+
+
+EC2를 생성할 때 Advanced Details에 스크립트를 붙여넣는다.
+
+
+
+### 42. EC2 Instance Metadata
+
